@@ -1,25 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import FileUpload from "./components/FileUpload";
+import QuestionDisplay from "./components/QuestionDisplay";
+import AnswerKeyForm from "./components/AnswerKeyForm";
+import EvaluationResult from "./components/EvaluationResult";
 
-function App() {
+const App = () => {
+  const [questions, setQuestions] = useState([]);
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [answerKey, setAnswerKey] = useState([]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {/* Upload PDF Route */}
+        <Route
+          path="/"
+          element={<FileUpload onQuestionsFetched={setQuestions} />}
+        />
+
+        {/* Question Display Route */}
+        <Route
+          path="/questions"
+          element={
+            <QuestionDisplay questions={questions} onSubmit={setUserAnswers} />
+          }
+        />
+
+        {/* Answer Key Submission Route */}
+        <Route
+          path="/answer-key"
+          element={
+            <AnswerKeyForm questions={questions} onSubmit={setAnswerKey} />
+          }
+        />
+
+        {/* Evaluation Route */}
+        <Route
+          path="/evaluate"
+          element={
+            <EvaluationResult
+              questions={questions}
+              userAnswers={userAnswers}
+              answerKey={answerKey}
+            />
+          }
+        />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
